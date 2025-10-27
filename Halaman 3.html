@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last part</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+            margin: 20px;
+        }
+        h1 {
+            color: #e91e63;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .heart {
+            font-size: 3em;
+            color: #e91e63;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, textarea {
+            padding: 15px;
+            border: 2px solid #e91e63;
+            border-radius: 10px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+        button {
+            padding: 15px;
+            background: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #c2185b;
+        }
+        .options {
+            margin-top: 10px;
+        }
+        .options label {
+            margin-right: 20px;
+        }
+
+        /* Responsif */
+        @media (max-width: 600px) {
+            .container { padding: 20px; margin: 10px; }
+            h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart">❤️</div>
+        <h1>Pesan untuk akuur</h1>
+        <p>Hehe kalo ada pesan buat akuu kirim siniii, mau ke WA atau email yaa 💌</p>
+        <form id="messageForm">
+            <input type="text" id="name" placeholder="Nama kamu" required>
+            <input type="email" id="email" placeholder="Email kamu" required>
+            <textarea id="message" placeholder="Tulis pesan romantismu di sini..." required></textarea>
+            
+            <div class="options">
+                <label><input type="radio" name="sendType" value="email" checked> Kirim via Email (Gmail)</label>
+                <label><input type="radio" name="sendType" value="whatsapp"> Kirim via WhatsApp</label>
+            </div>
+            <button type="submit">Kirim Pesan</button>
+        </form>
+    </div>
+
+    <!-- Script EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        emailjs.init('EoZ_onWIx_pRIJm15'); // Public key kamu
+
+        document.getElementById('messageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            const sendType = document.querySelector('input[name="sendType"]:checked').value;
+
+            if (sendType === 'email') {
+                // Kirim ke EmailJS
+                emailjs.send('service_p3du6vt', 'template_9w8twpc', {
+                    name: name,
+                    email: email,
+                    message: message
+                }).then(function(response) {
+                    alert('Pesan berhasil dikirim ke email! 💌');
+                    console.log('Success:', response);
+                }, function(error) {
+                    alert('Gagal mengirim pesan. Cek konfigurasi EmailJS.');
+                    console.log('Error:', error);
+                });
+            } 
+            else if (sendType === 'whatsapp') {
+                const whatsappUrl = `https://wa.me/6285158307338?text=${encodeURIComponent(
+                    `Halo, aku ${name} (${email}) ingin bilang: ${message}`
+                )}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        });
+    </script>
+</body>
+</html>

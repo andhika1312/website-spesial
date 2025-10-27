@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef, #ffecd2);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        
+        .welcome-container {
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .heart {
+            font-size: 100px;
+            color: #ff6b9d;
+            animation: pulse 1.5s infinite;
+            display: inline-block;
+        }
+        
+        .welcome-text {
+            font-size: 48px;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+        }
+        
+        .next-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #ff6b9d;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .next-button.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .next-button:hover {
+            background-color: #e55a8a;
+            transform: scale(1.05);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        /* Efek romantis tambahan: partikel hati kecil */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            font-size: 20px;
+            color: #ff6b9d;
+            animation: float 6s linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="heart">❤️</div>
+        <div class="welcome-text">Welcome sayangg</div>
+    </div>
+    
+    <a href="Tampilan 1.html" class="next-button" id="nextButton">Ke Halaman Selanjutnya 💕</a>
+    
+    <div class="particles" id="particles"></div>
+    
+    <script>
+        //partikel hati jatuh
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.textContent = '💖';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            document.getElementById('particles').appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 6000);
+        }
+        
+        setInterval(createParticle, 500);
+        
+        // Script untuk menampilkan tombol setelah 3 detik
+        setTimeout(() => {
+            document.getElementById('nextButton').classList.add('show');
+        }, 3000);
+    </script>
+</body>
+</html>

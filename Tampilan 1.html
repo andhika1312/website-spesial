@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Romantis: Slider Foto dan Video Lokal</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffe6f0, #ffb3d9);
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* Ornamen Hati Mengambang */
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .heart {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 2em;
+            animation: float 6s infinite linear;
+            opacity: 0.7;
+        }
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .heart:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .heart:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .heart:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .heart:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .heart:nth-child(7) { left: 70%; animation-delay: 0s; }
+        .heart:nth-child(8) { left: 80%; animation-delay: 1s; }
+        .heart:nth-child(9) { left: 90%; animation-delay: 2s; }
+        .heart:nth-child(10) { left: 15%; animation-delay: 3s; }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+        /* Ornamen Bunga di Pojok */
+        .corner-decoration {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 3em;
+            color: #d63384;
+            opacity: 0.5;
+        }
+        .corner-decoration::before {
+            content: "🌹";
+        }
+        h1 {
+            text-align: center;
+            color: #d63384;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        h1::before {
+            content: "💖 ";
+        }
+        h1::after {
+            content: " 💖";
+        }
+        p {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            text-align: center;
+            color: #d63384;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .section h2::before {
+            content: "🌸 ";
+        }
+        .section h2::after {
+            content: " 🌸";
+        }
+        .slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 20px;
+            padding: 10px;
+            max-width: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: #d63384 #ffe6f0;
+        }
+        .slider::-webkit-scrollbar {
+            height: 8px;
+        }
+        .slider::-webkit-scrollbar-track {
+            background: #ffe6f0;
+        }
+        .slider::-webkit-scrollbar-thumb {
+            background: #d63384;
+            border-radius: 4px;
+        }
+        .item {
+            flex: 0 0 300px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            scroll-snap-align: start;
+            transition: transform 0.3s ease;
+        }
+        .item:hover {
+            transform: scale(1.05);
+        }
+        .item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .item video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            border-radius: 15px 15px 0 0;
+        }
+        .caption {
+            padding: 10px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #d63384;
+        }
+        .caption::before {
+            content: "❤️ ";
+        }
+        /* Tombol dan Kertas Pesan */
+        .button-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .love-button {
+            background-color: #d63384;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: background-color 0.3s ease;
+        }
+        .love-button:hover {
+            background-color: #b02a6a;
+        }
+        .message-paper {
+            position: fixed;
+            bottom: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            height: 70vh;
+            background-color: #fff;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            padding: 30px;
+            text-align: center;
+            font-size: 1.2em;
+            color: #d63384;
+            transition: bottom 0.5s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .message-paper.show {
+            bottom: 20px;
+        }
+        .message-paper .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: #d63384;
+            cursor: pointer;
+        }
+        .message-paper .next-btn {
+            background-color: #d63384;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .message-paper .next-btn:hover {
+            background-color: #b02a6a;
+        }
+        @media (max-width: 600px) {
+            .item {
+                flex: 0 0 250px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .section h2 {
+                font-size: 1.5em;
+            }
+            .heart {
+                font-size: 1.5em;
+            }
+            .corner-decoration {
+                font-size: 2em;
+            }
+            .message-paper {
+                width: 95%;
+                height: 80vh;
+                font-size: 1em;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ornamen Hati Mengambang -->
+    <div class="floating-hearts">
+        <div class="heart">❤️</div>
+        <div class="heart">💖</div>
+        <div class="heart">💕</div>
+        <div class="heart">💗</div>
+        <div class="heart">💓</div>
+        <div class="heart">💞</div>
+        <div class="heart">💘</div>
+        <div class="heart">💝</div>
+        <div class="heart">💟</div>
+        <div class="heart">❣️</div>
+    </div>
+    
+    <!-- Ornamen Bunga di Pojok -->
+    <div class="corner-decoration"></div>
+    
+      <h1>MOMENT MOMENT WITH YOU</h1>
+    <p>Berisi moment moment selama bersama kamu !</p>
+    
+    <div class="section">
+        <h2>FOTO</h2>
+        <div class="slider">
+            <div class="item">
+                <img src="images/foto1.jpg" alt="Cinta Abadi">
+                <div class="caption">Foto bareng terakhir kita</div>
+            </div>
+            <div class="item">
+                <img src="images/foto2.jpg" alt="Matahari Terbit Bersama">
+                <div class="caption">Peratama kali kota photobox</div>
+            </div>
+            <div class="item">
+                <img src="images/foto3.jpg" alt="Bunga Untuk Kamu">
+                <div class="caption">Bunga Untuk Kamu</div>
+            </div>
+            <div class="item">
+                <img src="images/foto4.jpg" alt="Jalanan Romantis">
+                <div class="caption">Jalanan Romantis</div>
+            </div>
+            <div class="item">
+                <img src="images/foto5.jpg" alt="Pelukan Hangat">
+                <div class="caption">Pelukan Hangat</div>
+            </div>
+            <div class="item">
+                <img src="images/foto6.jpg" alt="Mimpi Bersama">
+                <div class="caption">Mimpi Bersama</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>VIDEO</h2>
+        <div class="slider">
+            <div class="item">
+                <video controls>
+                    <source src="videos/video1.mp4" type="video/mp4">
+                    Browser Anda tidak mendukung tag video.
+                </video>
+                <div class="caption">Last moment in banjarmasin</div>
+            </div>
+            <div class="item">
+                <video controls>
+                    <source src="videos/video2.mp4" type="video/mp4">
+                    Browser Anda tidak mendukung tag video.
+                </video>
+                <div class="caption">Beach Date ˖°𓇼🌊⋆</div>
+            </div>
+    </div>
+    
+    <!-- Tombol dan Kertas Pesan -->
+    <div class="button-container">
+        <button class="love-button" onclick="showMessage()">💌 Kirim Pesan Cinta</button>
+    </div>
+    
+    <div class="message-paper" id="messagePaper">
+        <button class="close-btn" onclick="hideMessage()">×</button>
+        <h3>💖 Pesan buat kamu 💖</h3>
+        <p>Aku mau ngucapin makasih sama kamu sampai saat ini kita masing bisa bareng bareng masih bercanda bareng walaupun kita juga suka berantem karna hal hal kecil tapi dari hal kecil itu kita banyak belajar apa yang kita suka dan apa yang kita gasuka 🌹❤️</p>
+        <p>Aku juga mau minta maaf kalo aku masih banyak kurangnya aku bakalan tetep berusaha buat jadi yang terbaik buat kamu,makasih untuk selama ini semoga kedepannya kita masih tetep sama sama dan apa yang kita mau bisa tercapai satu persatu hehehe LOVE YOU SAYANG 💕</p>
+        <button class="next-btn" onclick="goToNextPage()">🌟 Pencet ini!!!</button>
+    </div>
+    
+    <script>
+        function showMessage() {
+            document.getElementById('messagePaper').classList.add('show');
+        }
+        function hideMessage() {
+            document.getElementById('messagePaper').classList.remove('show');
+        }
+        function goToNextPage() {
+            // Ganti 'halaman-selanjutnya.html' dengan nama file halaman berikutnya Anda
+            window.location.href = 'tampilan 2.html';
+        }
+    </script>
+</body>
+</html>

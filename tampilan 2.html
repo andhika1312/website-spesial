@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman 2</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            margin: 20px;
+        }
+        h1 {
+            font-size: 2em;
+            color: #e91e63;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        button {
+            background: #e91e63;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px;
+            flex: 1 1 30%;
+            min-width: 120px;
+        }
+        button:hover {
+            background: #c2185b;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(100vh);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2em;
+            cursor: pointer;
+            color: #e91e63;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .gallery img {
+            width: 100%;
+            height: 120px; /* Tinggi tetap untuk rapih */
+            object-fit: cover; /* Potong gambar agar pas tanpa distorsi */
+            border-radius: 10px;
+        }
+        .game {
+            text-align: center;
+        }
+        .game .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .game button.option {
+            margin: 5px;
+            width: 200px;
+        }
+        .password input {
+            margin: 10px;
+            padding: 10px;
+            width: 100%;
+            max-width: 200px;
+        }
+        .proposal-page {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .proposal-page h2 {
+            color: #e91e63;
+            font-size: 2.5em;
+        }
+        .proposal-page p {
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+        .proposal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .proposal-buttons button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            .buttons {
+                flex-direction: column;
+            }
+            button {
+                flex: 1 1 100%;
+            }
+            .modal {
+                width: 95%;
+                padding: 15px;
+            }
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            .gallery img {
+                height: 100px; /* Tinggi lebih kecil di mobile */
+            }
+            .proposal-page {
+                padding: 30px;
+            }
+            .proposal-page h2 {
+                font-size: 2em;
+            }
+            .proposal-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        /* Ornamen Hati Mengambang */
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .heart {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 2em;
+            animation: float 6s infinite linear;
+            opacity: 0.7;
+        }
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .heart:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .heart:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .heart:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .heart:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .heart:nth-child(7) { left: 70%; animation-delay: 0s; }
+        .heart:nth-child(8) { left: 80%; animation-delay: 1s; }
+        .heart:nth-child(9) { left: 90%; animation-delay: 2s; }
+        .heart:nth-child(10) { left: 15%; animation-delay: 3s; }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+        <!-- Ornamen Hati Mengambang -->
+    <div class="floating-hearts">
+        <div class="heart">❤️</div>
+        <div class="heart">💖</div>
+        <div class="heart">💕</div>
+        <div class="heart">💗</div>
+        <div class="heart">💓</div>
+        <div class="heart">💞</div>
+        <div class="heart">💘</div>
+        <div class="heart">💝</div>
+        <div class="heart">💟</div>
+        <div class="heart">❣️</div>
+    </div>
+    
+    <!-- Ornamen Bunga di Pojok -->
+    <div class="corner-decoration"></div>
+    <div class="container" id="mainContainer">
+        <h1>💖 HEHEHE DI JAWAB DULU PERTANYAANNYA💖</h1>
+        <p>Selamat datang tuan putri!</p>
+        <div class="buttons">
+            <button onclick="openModal('photoModal')">Foto Kita</button>
+            <button onclick="openModal('gameModal')">Mini Game</button>
+            <button onclick="openModal('passwordModal')">Halaman Selanjutnya</button>
+        </div>
+    </div>
+
+    <!-- Modal Foto -->
+    <div id="photoModal" class="overlay">
+        <div class="modal">
+            <span class="close" onclick="closeModal('photoModal')">&times;</span>
+            <h2>Foto Romantis Kita</h2>
+            <div class="gallery">
+                <!-- Ganti dengan path foto asli dari folder Anda, misalnya images/foto1.jpg -->
+                <img src="images/foto1.jpg" alt="Foto 1">
+                <img src="images/foto2.jpg" alt="Foto 2">
+                <img src="images/foto3.jpg" alt="Foto 3">
+                <img src="images/foto4.jpg" alt="Foto 4">
+                <img src="images/foto5.jpg" alt="Foto 5">
+                <img src="images/foto6.jpg" alt="Foto 6">
+                <img src="images/foto7.jpg" alt="Foto 7">
+                <img src="images/foto8.jpg" alt="Foto 8">
+                <img src="images/foto9.jpg" alt="Foto 9">
+                <img src="images/foto10.jpg" alt="Foto 10">
+                <img src="images/foto11.jpg" alt="Foto 11">
+                <img src="images/foto12.jpg" alt="Foto 12">
+                <img src="images/foto13.jpg" alt="Foto 13">
+                <img src="images/foto14.jpg" alt="Foto 14">
+                <img src="images/foto15.jpg" alt="Foto 15">
+                <!-- Tambahkan lebih banyak jika diperlukan, atau hapus yang tidak ada -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Mini Game -->
+    <div id="gameModal" class="overlay">
+        <div class="modal">
+            <span class="close" onclick="closeModal('gameModal')">&times;</span>
+            <h2>Mini Game </h2>
+            <div class="game">
+                <p id="question">Pertanyaan akan muncul di sini.</p>
+                <div class="options">
+                    <button class="option" onclick="checkAnswer('A')" id="optionA">A. Pilihan A</button>
+                    <button class="option" onclick="checkAnswer('B')" id="optionB">B. Pilihan B</button>
+                    <button class="option" onclick="checkAnswer('C')" id="optionC">C. Pilihan C</button>
+                </div>
+                <p id="result"></p>
+                <button onclick="nextQuestion()" id="nextBtn" style="display: none;">Pertanyaan Selanjutnya</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Password -->
+    <div id="passwordModal" class="overlay">
+        <div class="modal">
+            <span class="close" onclick="closeModal('passwordModal')">&times;</span>
+            <h2>Masukkan Password</h2>
+            <div class="password">
+                <input type="password" id="password" placeholder="Password">
+                <button onclick="checkPassword()">Masuk</button>
+                <p id="passResult"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Halaman Proposal -->
+    <div id="proposalPage" class="proposal-page">
+        <h2>💕 Proposal Khusus 💕</h2>
+        <p>Yeayy akhirnya kamu bisa jawab hehehe,maaf yaa ini masih belum sempurna apa yang aku buat</p>
+        <p>Akhirnya kita bisa sampai sejauh ini yaa ga nyangka aku kalo kita bisa sampe sejauh ini yang dulu aku pikir bakalan sama kaya masalalu ternyata engga hehehe</p>
+        <p>Aku seneng bangett bisa sama kamu sampai sejauh inii HAPPY ANIVERSARY KITA YAA YANG KE 8 BULANN HEHEHE LOVE YOU SAYANGGG</p>
+        <P>SEMOGA KEDEPANNYA BISA JAUH LEBIH BAIK LAGII SEMANGAT JUGA BUAT KAMU GABOLEH SEDIH SEDIH TERUSS AKU SELALU ADA DI DEKET KAMU KO SELALU DUKUNG KAMU</P>
+        <P>BTW SEMANGATT SAMAPI AKHIR WEBSITE INI LOVE YOUUUUUUU</P>
+        <p id="proposalResult" style="margin-top: 20px;"></p>
+        <button onclick="window.location.href='Halaman 3.html'" style="margin-top: 20px;">ke halaman terakhir</button>
+    </div>
+
+    <script>
+        // Data pertanyaan (sudah diatur developer)
+        const questions = [
+            {
+                question: "Apa warna favorit aku?",
+                options: ["A. Biru", "B. Merah", "C. Hijau"],
+                answer: "A"
+            },
+            {
+                question: "Apa makanan favorit saya?",
+                options: ["A. Nasi Padang", "B. Mie Ayam", "C. Pentol"],
+                answer: "B"
+            },
+            {
+                question: "Jam berapa kita jadian?",
+                options: ["A. 02.00 WIB", "B. Aku Lupa", "C. 11.00 WIB"],
+                answer: "B"
+            },
+            {
+                question: "Apa yang aku suka?",
+                options: ["A. Kucing", "B. Kelinci", "C. Mucu"],
+                answer: "C"
+            },
+            {
+                question: "Apa nama panggilan saya untukmu?",
+                options: ["A. Sayang", "B. Cinta", "C. Manis"],
+                answer: "A"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let usedQuestions = [];
+
+        function openModal(modalId) {
+            if (modalId === 'gameModal') {
+                resetGame();
+                loadQuestion();
+            }
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function resetGame() {
+            currentQuestionIndex = 0;
+            usedQuestions = [];
+            document.getElementById('result').textContent = '';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= 5) {
+                document.getElementById('question').textContent = 'Game selesai! Kamu hebat! 💖';
+                document.getElementById('optionA').style.display = 'none';
+                document.getElementById('optionB').style.display = 'none';
+                document.getElementById('optionC').style.display = 'none';
+                document.getElementById('nextBtn').style.display = 'none';
+                return;
+            }
+
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * questions.length);
+            } while (usedQuestions.includes(randomIndex));
+
+            usedQuestions.push(randomIndex);
+            const q = questions[randomIndex];
+
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('optionA').textContent = q.options[0];
+            document.getElementById('optionB').textContent = q.options[1];
+            document.getElementById('optionC').textContent = q.options[2];
+            document.getElementById('optionA').style.display = 'block';
+            document.getElementById('optionB').style.display = 'block';
+            document.getElementById('optionC').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function checkAnswer(choice) {
+            const currentQ = questions[usedQuestions[currentQuestionIndex]];
+            const result = document.getElementById('result');
+            if (choice === currentQ.answer) {
+                result.textContent = 'Benar! Kamu tahu aku dengan baik. 💖';
+                result.style.color = 'green';
+                document.getElementById('nextBtn').style.display = 'block'; // Hanya tampil jika benar
+            } else {
+                result.textContent = 'Salah, coba lagi! 😊';
+                result.style.color = 'red';
+                // Tidak tampilkan tombol next jika salah
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            document.getElementById('result').textContent = '';
+            loadQuestion();
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            const passResult = document.getElementById('passResult');
+            if (password === 'ANDHIKAHIKMAH34') { // Password sudah diatur developer
+                document.getElementById('passwordModal').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'none';
+                document.getElementById('proposalPage').style.display = 'block';
+            } else {
+                passResult.textContent = 'Password salah, coba lagi!';
+                passResult.style.color = 'red';
+            }
+        }
+
+        function answerProposal(answer) {
+            const result = document.getElementById('proposalResult');
+            if (answer === 'Ya') {
+                result.textContent = 'Yay! Aku sangat bahagia! Kita akan bersama selamanya. 💕';
+                result.style.color = 'green';
+            } else {
+                result.textContent = 'Oh... Aku akan selalu mencintaimu. 😢';
+                result.style.color = 'red';
+            }
+        }
+
+        function goBack() {
+            document.getElementById('proposalPage').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
